@@ -6,11 +6,11 @@ public class Main {
 
         Vector<Integer> packageList = new Vector<>();
 
-        Semaphore fullListSemaphore = new Semaphore(0);
-        Semaphore emptyListSemaphore = new Semaphore(1);
+        Semaphore sendPackageSemaphore = new Semaphore(3);
+        Semaphore receivePackageSemaphore = new Semaphore(0);
 
-        Thread firstThread = new Thread(new FirstThread(100, fullListSemaphore, emptyListSemaphore, packageList));
-        Thread secondThread = new Thread(new SecondThread(100, fullListSemaphore, emptyListSemaphore, packageList));
+        Thread firstThread = new Thread(new FirstThread(100, sendPackageSemaphore, receivePackageSemaphore, packageList));
+        Thread secondThread = new Thread(new SecondThread(100, sendPackageSemaphore, receivePackageSemaphore, packageList));
 
         firstThread.start();
         secondThread.start();

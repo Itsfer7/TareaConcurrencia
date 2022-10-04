@@ -3,15 +3,15 @@ import java.util.concurrent.Semaphore;
 
 public class SecondThread implements Runnable {
     private final int times;
-    private final Semaphore fullListSemaphore;
-    private final Semaphore emptyListSemaphore;
+    private final Semaphore sendPackageSemaphore;
+    private final Semaphore receivePackageSemaphore;
     private final Vector<Integer> packageList;
 
 
-    public SecondThread(int times, Semaphore fullListSemaphore, Semaphore emptyListSemaphore, Vector<Integer> packageList) {
+    public SecondThread(int times, Semaphore sendPackageSemaphore, Semaphore receivePackageSemaphore, Vector<Integer> packageList) {
         this.times = times;
-        this.fullListSemaphore = fullListSemaphore;
-        this.emptyListSemaphore = emptyListSemaphore;
+        this.sendPackageSemaphore = sendPackageSemaphore;
+        this.receivePackageSemaphore = receivePackageSemaphore;
         this.packageList = packageList;
     }
 
@@ -19,14 +19,11 @@ public class SecondThread implements Runnable {
     public void run() {
         for (int i = 1; i <= times; i++) {
             try {
-                fullListSemaphore.acquire();
-                if (packageList.size() == 0) {
-                    emptyListSemaphore.acquire();
-                    System.out.println("Recibiendo paquete " + i);
-                } else {
-                    fullListSemaphore.release();
-                }
-                emptyListSemaphore.release();
+                receivePackageSemaphore.acquire();
+                packageList.remove(0);
+                System.out.println("Recibiendo paquete " + i);
+                sendPackageSemaphore.release();
+                Thread.sleep(10);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

@@ -20,8 +20,8 @@ public class SecondThread implements Runnable {
         for (int i = 1; i <= times; i++) {
             try {
                 receivePackageSemaphore.acquire();
-                packageList.remove(0);
-                System.out.println("Recibiendo paquete " + i);
+                int num = packageList.remove(0);
+                System.out.println("Recibiendo paquete " + num);
                 sendPackageSemaphore.release();
                 Thread.sleep(10);
             } catch (InterruptedException e) {
